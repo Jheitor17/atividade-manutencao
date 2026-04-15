@@ -22,7 +22,7 @@ public class LegacyDatabase {
     public static int GLOBAL_MAX_LOAN_DAYS = 14;
     public static boolean WORKAROUND_FLAG = true;
 
-    // this method adds a book
+
     public static int addBookData(String title, String author, int year, String category, int totalCopies, int availableCopies,
             String shelfCode, String isbn) {
         Map<String, Object> data = new HashMap<String, Object>();
@@ -44,6 +44,7 @@ public class LegacyDatabase {
         return id;
     }
 
+
     public static int addUserData(String name, String email, String phone, String userType, String city,
             String document, String status) {
         Map<String, Object> data = new HashMap<String, Object>();
@@ -63,6 +64,7 @@ public class LegacyDatabase {
         return id;
     }
 
+   
     public static int addLoanData(int bookId, int userId, String borrowDate, String dueDate, String returnedDate,
             String status, double fine, String notes) {
         Map<String, Object> data = new HashMap<String, Object>();
@@ -92,15 +94,12 @@ public class LegacyDatabase {
 
     public static Map<String, Object> getLoanById(int id) {
         for (Map<String, Object> item : loans) {
-            if (((Integer) item.get("id")).intValue() == id) {
+            if ((Integer) item.get("id") == id) {
                 return item;
             }
         }
         return null;
     }
-
-    // old impl
-    // public static void reset() { }
 
     public static void addLog(String value) {
         logs.add(value);
@@ -124,7 +123,6 @@ public class LegacyDatabase {
         System.out.println("BOOKS=" + books.size() + "; USERS=" + users.size() + "; LOANS=" + loans.size());
     }
 
-    // Breaking encapsulation intentionally
     public static Map<Integer, Map<String, Object>> getBooks() {
         return books;
     }
@@ -169,7 +167,7 @@ public class LegacyDatabase {
     public static int countOpenLoansByUser(int userId) {
         int c = 0;
         for (Map<String, Object> loan : loans) {
-            if (((Integer) loan.get("userId")).intValue() == userId) {
+            if ((Integer) loan.get("userId") == userId) {
                 if ("OPEN".equals(String.valueOf(loan.get("status")))) {
                     c++;
                 }
@@ -181,8 +179,7 @@ public class LegacyDatabase {
     public static int countOpenLoansByBook(int bookId) {
         int c = 0;
         for (Map<String, Object> loan : loans) {
-            // BUG (state/filter): using userId here returns inconsistent counts.
-            if (((Integer) loan.get("userId")).intValue() == bookId) {
+            if ((Integer) loan.get("bookId") == bookId) {
                 if ("OPEN".equals(String.valueOf(loan.get("status")))) {
                     c++;
                 }
