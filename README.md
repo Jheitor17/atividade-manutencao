@@ -24,20 +24,26 @@ O foco das atividades é melhorar o código de forma incremental, com mudanças 
 unicesumar-manutencao/
 ├── exemplos/
 │   └── clean-code/
-
+├── ATIVIDADES/
+│   ├── 1BIM/
+│   │   ├── ATIVIDADE_1.md
+│   │   └── ATIVIDADE_2.md
+│   └── 2BIM/
 └── library-maintenance-lab/
-	├── ATIVIDADE_1.md
-	├── ATIVIDADE_2.md
-	├── README.md
-	└── src/
+    ├── README.md
+    └── src/
 ```
 
 ## Atividades
 
-As atividades oficiais da disciplina estão em:
+### 1º Bimestre
 
-1. [Atividade 1 - Análise de Código e Manutenção Preventiva](library-maintenance-lab/ATIVIDADE_1.md)
-2. [Atividade 2 - Manutenção Corretiva e Evolutiva](library-maintenance-lab/ATIVIDADE_2.md)
+1. [Atividade 1 - Análise de Código e Manutenção Preventiva](ATIVIDADES/1BIM/ATIVIDADE_1.md)
+2. [Atividade 2 - Manutenção Corretiva e Evolutiva](ATIVIDADES/1BIM/ATIVIDADE_2.md)
+
+### 2º Bimestre
+
+1. [Atividade 1 - Rastreamento e Classificação de Bugs](ATIVIDADES/2BIM/ATIVIDADE_1.md)
 
 ## Lista de Exercícios de fixação para Prova 1
 
@@ -52,8 +58,8 @@ As atividades oficiais da disciplina estão em:
 ## Como Começar
 
 1. Leia o contexto do projeto em [library-maintenance-lab/README.md](library-maintenance-lab/README.md).
-2. Abra a [Atividade 1](library-maintenance-lab/ATIVIDADE_1.md).
-3. Em seguida, desenvolva a [Atividade 2](library-maintenance-lab/ATIVIDADE_2.md).
+2. Abra a [Atividade 1](ATIVIDADES/1BIM/ATIVIDADE_1.md).
+3. Em seguida, desenvolva a [Atividade 2](ATIVIDADES/1BIM/ATIVIDADE_2.md).
 
 ## Licença
 

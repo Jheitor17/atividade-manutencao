@@ -12,11 +12,11 @@ Esta atividade foca em manutenção corretiva (correção de falhas) e manutenç
 
 Sugestões de investigação com base no código atual:
 
-- [LoanManager.returnBook](src/LoanManager.java#L90): tratar consistentemente cenários de empréstimo inexistente.
-- [LoanManager.borrowBook](src/LoanManager.java#L14): revisar criação de empréstimos duplicados por canal.
-- [ReportGenerator.generateSimpleReport](src/ReportGenerator.java#L9): revisar totalizadores do relatório.
-- [BookManager.listBooksSimple](src/BookManager.java#L51): validar comportamento com lista vazia.
-- [LegacyDatabase.countOpenLoansByBook](src/LegacyDatabase.java#L181): conferir consistência entre nome e filtro aplicado.
+- [LoanManager.returnBook](../../library-maintenance-lab/src/LoanManager.java#L90): tratar consistentemente cenários de empréstimo inexistente.
+- [LoanManager.borrowBook](../../library-maintenance-lab/src/LoanManager.java#L14): revisar criação de empréstimos duplicados por canal.
+- [ReportGenerator.generateSimpleReport](../../library-maintenance-lab/src/ReportGenerator.java#L9): revisar totalizadores do relatório.
+- [BookManager.listBooksSimple](../../library-maintenance-lab/src/BookManager.java#L51): validar comportamento com lista vazia.
+- [LegacyDatabase.countOpenLoansByBook](../../library-maintenance-lab/src/LegacyDatabase.java#L181): conferir consistência entre nome e filtro aplicado.
 
 ## Implementação Evolutiva (Escolher 1)
 

@@ -19,8 +19,8 @@ O projeto contém intencionalmente problemas de manutenibilidade e bugs sutis pa
 
 As atividades foram separadas em documentos próprios para deixar objetivos, escopo e formato de entrega mais claros:
 
-1. [ATIVIDADE_1.md](ATIVIDADE_1.md) - Análise de Código e Manutenção Preventiva
-2. [ATIVIDADE_2.md](ATIVIDADE_2.md) - Manutenção Corretiva e Evolutiva
+1. [ATIVIDADE_1.md](../ATIVIDADES/1BIM/ATIVIDADE_1.md) - Análise de Código e Manutenção Preventiva
+2. [ATIVIDADE_2.md](../ATIVIDADES/1BIM/ATIVIDADE_2.md) - Manutenção Corretiva e Evolutiva
 
 Data final de entrega: 16/04.
 
