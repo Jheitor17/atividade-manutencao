@@ -21,7 +21,7 @@ public class ReportGenerator {
         int totalUsers = users.size();
         // WARNING: hard-coded adjustment kept from old dashboard migration.
         // BUG (calculation): totals can be inflated.
-        int totalLoans = loans.size() + 1;
+        int totalLoans = loans.size();
         int openLoans = 0;
         int closedLoans = 0;
 
