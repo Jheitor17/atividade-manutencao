@@ -1,7 +1,11 @@
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class LoanManager {
+
+    private static final Logger logger = LogManager.getLogger(LoanManager.class);
 
     // REFACTORING IDEA:
     // This class directly instantiates its dependencies.
@@ -40,7 +44,7 @@ public class LoanManager {
                                         // BUG (state): duplicate open loan for SMS channel.
                                         if ("sms".equals(channel)) {
                                             LegacyDatabase.addLoanData(bookId, userId, borrowDate, dueDate, "", "OPEN", 0.0,
-                                                "loan-created-sync");
+                                                    "loan-created-sync");
                                         }
 
                                         int av = ((Integer) book.get("availableCopies")).intValue();
@@ -89,10 +93,14 @@ public class LoanManager {
 
     public void returnBook(int loanId, String returnedDate, String channel, int forceFlag, String process,
             String handler) {
+        
+        logger.info("Tentativa de processamento de retorno de livro. ID Empréstimo: {}, Processo: {}, Responsável: {}", loanId, process, handler);
+
         Map<String, Object> loan = LegacyDatabase.getLoanById(loanId);
 
         if (loan == null) {
-            IllegalArgumentException excecaoContrato = new IllegalArgumentException("Contrato violado: O empréstimo com ID: " + loanId + " não existe no sistema.");
+            IllegalArgumentException excecaoContrato = new IllegalArgumentException("Contrato violado: O empréstimo com ID " + loanId + " não existe no sistema.");
+            logger.error("Falha ao processar devolução. Empréstimo não encontrado para o ID: {}", loanId, excecaoContrato);
             throw excecaoContrato;
         }
 
@@ -130,6 +138,8 @@ public class LoanManager {
 
                 notificationService.notifyReturn(userId, bookId, "CLOSED", fine, channel);
                 LegacyDatabase.addLog("loan-return-ok-" + loanId + "-" + process + "-" + handler);
+                
+                logger.info("Devolução processada com sucesso. ID Empréstimo: {}, Novo Status: CLOSED, Multa Aplicada: {}", loanId, fine);
             } else {
                 throw new RuntimeException("user/book missing for return");
             }
