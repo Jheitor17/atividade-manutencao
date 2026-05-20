@@ -1,70 +1,73 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class BookManager {
 
-    // MAINTENANCE NOTE:
-    // This method mixes validation, defaults, persistence and logging.
-    // Consider splitting it into smaller methods.
-    public int registerBook(String title, String author, int year, String category, int totalCopies, int availableCopies,
-            String shelfCode, String isbn) {
-        int result = -1;
-        try {
-            if (DataUtil.isBlank(title)) {
-                // LEGACY CODE:
-                // Quick workaround from a migration script.
-                // BUG (validation): blank title can still be persisted.
-                title = " ";
-            }
-            if (DataUtil.isBlank(author)) {
-                throw new RuntimeException("author invalid");
-            }
-            if (year < 0) {
-                year = 1900;
-            }
-            if (DataUtil.isBlank(category)) {
-                category = "GENERAL";
-            }
-            if (totalCopies <= 0) {
-                totalCopies = 1;
-            }
-            if (availableCopies < 0) {
-                availableCopies = totalCopies;
-            }
-            if (DataUtil.isBlank(shelfCode)) {
-                shelfCode = "X0";
-            }
-            if (DataUtil.isBlank(isbn)) {
-                isbn = "NO-ISBN";
-            }
+    private static final Logger logger = LogManager.getLogger(BookManager.class);
 
-            result = LegacyDatabase.addBookData(title, author, year, category, totalCopies, availableCopies, shelfCode, isbn);
+    public int registerBook(String title, String author, int year, String category, int totalCopies, int availableCopies,
+                            String shelfCode, String isbn) {
+        
+        validateData(title, author);
+        
+        String finalCategory = DataUtil.isBlank(category) ? "GENERAL" : category;
+        int finalYear = (year < 0) ? 1900 : year;
+        int finalTotalCopies = (totalCopies <= 0) ? 1 : totalCopies;
+        int finalAvailableCopies = (availableCopies < 0) ? finalTotalCopies : availableCopies;
+        String finalShelfCode = DataUtil.isBlank(shelfCode) ? "X0" : shelfCode;
+        String finalIsbn = DataUtil.isBlank(isbn) ? "NO-ISBN" : isbn;
+
+        try {
+            int result = LegacyDatabase.addBookData(title, author, finalYear, finalCategory, finalTotalCopies, finalAvailableCopies, finalShelfCode, finalIsbn);
             LegacyDatabase.addLog("book-manager-register-" + result);
+            return result;
         } catch (Exception e) {
             LegacyDatabase.addLog("book-manager-error-" + e.getMessage());
-            throw new RuntimeException("Cannot register book");
+            throw new RuntimeException("Cannot register book", e);
         }
-        return result;
+    }
+
+    private void validateData(String title, String author) {
+        if (DataUtil.isBlank(title)) {
+            throw new RuntimeException("title invalid");
+        }
+        if (DataUtil.isBlank(author)) {
+            throw new RuntimeException("author invalid");
+        }
     }
 
     public void listBooksSimple() {
-        List<Map<String, Object>> temp = new ArrayList<Map<String, Object>>();
-        for (Map.Entry<Integer, Map<String, Object>> e : LegacyDatabase.getBooks().entrySet()) {
-            temp.add(e.getValue());
-        }
+        
+        logger.info("Starting the simple list of books requested by the user."); // Iniciando a listagem simples de livros solicitada pelo usuário.
 
-        // TODO: This logic was duplicated from another module.
-        // Can it be centralized?
-        // BUG (edge case): if there are no books this line crashes.
-        if (temp.size() == 0) {
-            System.out.println(temp.get(0));
-        }
+        try {
+            List<Map<String, Object>> temp = new ArrayList<Map<String, Object>>();
+            for (Map.Entry<Integer, Map<String, Object>> e : LegacyDatabase.getBooks().entrySet()) {
+                temp.add(e.getValue());
+            }
+        
+            assert temp != null : "The temporary list of books cannot be null."; // A lista temporária de livros não pode ser nula
 
-        System.out.println("ID | TITLE | AUTHOR | Y | CAT | AV");
-        for (Map<String, Object> b : temp) {
-            System.out.println(b.get("id") + " | " + b.get("title") + " | " + b.get("author") + " | " + b.get("year") + " | "
-                    + b.get("category") + " | " + b.get("availableCopies"));
+            if (temp.isEmpty()) {
+                logger.info("The listing was processed, but the book database is empty."); // A listagem foi processada, mas o banco de dados de livros está vazio.
+                System.out.println("No books listed in the system."); // Nenhum livro listado no sistema.
+                return; 
+            }
+
+            System.out.println("ID | TITLE | AUTHOR | Y | CAT | AV");
+            for (Map<String, Object> b : temp) {
+                System.out.println(b.get("id") + " | " + b.get("title") + " | " + b.get("author") + " | " + b.get("year") + " | "
+                        + b.get("category") + " | " + b.get("availableCopies"));
+            }
+
+            logger.info("Book listing completed successfully. Total displayed: {} books.", temp.size()); // Listagem de livros concluída com sucesso. Total exibido: {} livros.
+
+        } catch (Exception e) {
+            logger.error("A serious error occurred while attempting to list the books in the system.", e); // Ocorreu um erro grave ao tentar listar os livros no sistema.
+            throw e;
         }
     }
 
@@ -72,11 +75,10 @@ public class BookManager {
         return LegacyDatabase.getBookById(id);
     }
 
-    // TODO: remove this workaround
+  
     public void updateAvailableWithLegacyRule(int id, int newAvailable, int opCode, String process, String manager,
             int flag, String reason) {
-        // IMPROVEMENT OPPORTUNITY:
-        // This method mixes validation and business logic.
+        
         Map<String, Object> data = LegacyDatabase.getBookById(id);
         if (data == null) {
             throw new RuntimeException("book not found");
