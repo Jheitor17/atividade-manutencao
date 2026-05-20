@@ -48,4 +48,12 @@ public class LoanManagerTest {
 
         assertTrue(report.contains("Closed loans: 1"));
     }
+
+    @Test
+    public void deveFalharRapidoQuandoEmprestimoNaoForEncontrado() {
+        LoanManager loanManager = new LoanManager();
+        int loanIdInexistente = -1;
+
+        assertThrows(IllegalArgumentException.class, () -> loanManager.returnBook(loanIdInexistente, "2026-05-20", "email", 0, "teste-retorno", "junit"));
+    }
 }
